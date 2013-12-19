@@ -8,8 +8,8 @@ module Migrant
       FileUtils.mkdir_p(Rails.root.join('db', 'migrate'))
       @possible_irreversible_migrations = false
 
-      migrator = (ActiveRecord::Migrator.public_methods.include?(:open))? 
-                  ActiveRecord::Migrator.open(migrations_path) : 
+      migrator = (ActiveRecord::Migrator.public_methods.include?(:open))?
+                  ActiveRecord::Migrator.open(migrations_path) :
                   ActiveRecord::Migrator.new(:up, migrations_path)
 
       unless migrator.pending_migrations.blank?
@@ -23,7 +23,7 @@ module Migrant
       model_root = "#{Rails.root.to_s}/app/models/"
 
       Dir["#{model_root}**/*.rb"].each do |file|
-        if (model_name = file.sub(model_root, '').match(/(.*)?\.rb$/))
+        if (model_name = file.sub(model_root, '').match(/(.*)?\.rb$/)) && (!file.include? '/concerns/')
           model_name[1].camelize.safe_constantize
         end
       end
